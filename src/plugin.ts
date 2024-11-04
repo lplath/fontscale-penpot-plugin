@@ -1,23 +1,34 @@
-penpot.ui.open("Penpot plugin starter template", `?theme=${penpot.theme}`);
+import { Theme } from "@penpot/plugin-types";
 
-penpot.ui.onMessage<string>((message) => {
-  if (message === "create-text") {
-    const text = penpot.createText("Hello world!");
+function createTypescale(scale: number, up: number, down: number) {
+  //TODO
+}
 
-    if (text) {
-      text.x = penpot.viewport.center.x;
-      text.y = penpot.viewport.center.y;
-
-      penpot.selection = [text];
-    }
+function onMessageReceived(message: string) {
+  if (message.startsWith("generate")) {
+    const { scale, up, down } = JSON.parse(message.split("-")[1]) as { scale: number, up: number, down: number };
+    createTypescale(scale, up, down);
   }
-});
+}
 
-// Update the theme in the iframe
-penpot.on("themechange", (theme) => {
+function onThemeChanged(theme: Theme) {
   penpot.ui.sendMessage({
-    source: "penpot",
     type: "themechange",
-    theme,
+    content: theme,
   });
-});
+}
+
+function onSelectionChanged() {
+  const selection = penpot.selection;
+  penpot.ui.sendMessage({
+    type: "textselected",
+    content: (selection.length == 1 && penpot.utils.types.isText(selection[0]))
+  })
+}
+
+penpot.ui.open("Typescale", `?theme=${penpot.theme}`, { width: 260, height: 290});
+penpot.ui.onMessage(onMessageReceived);
+penpot.on("selectionchange", onSelectionChanged);
+penpot.on("themechange", onThemeChanged);
+
+onSelectionChanged();
