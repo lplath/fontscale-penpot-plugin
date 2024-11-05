@@ -5,55 +5,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Typescale</title>
+
+
 </head>
 
-<body>
-  
-  <div id="empty-message" class="">
+<body x-data>
+
+  <div x-show="!$store.uiVisible">
     <p class="body-m">
       Select a textbox with a base font
     </p>
   </div>
 
-  <div class="hidden" id="ui">
-    <div class="container">
-
-      <div class="scale-options">
-        <label class="select-label-hidden" for="ratio">Scale</label>
-        <select class="select" id="ratio">
-          <option value="1.067">1.067 - Minor Second</option>
-          <option value="1.125">1.125 - Major Second</option>
-          <option value="1.2">1.2 - Minor Third</option>
-          <option value="1.25">1.25 - Major Third</option>
-          <option value="1.33">1.33 - Perfect Fourth</option>
-          <option value="1.406">1.406 - Augmented Fourth</option>
-          <option value="1.5">1.5 - Perfect Fifth</option>
-          <option value="1.6">1.6 - Minor Sixth</option>
-          <option value="1.618">1.618 - Golden Ratio</option>
-          <option value="1.667">1.667 - Major Sixth</option>
-          <option value="1.8">1.8 - Minor Seventh</option>
-          <option value="1.875">1.875 - Major Seventh</option>
-          <option value="2">2 - Octave</option>
-        </select>
-      </div>
-
-      <div class="range-options">
-        <div>
-          <label class="caption" for="up">Up</label>
-          <input class="input" type="number" placeholder="Up" value="4" id="up">
-        </div>
-
-        <div>
-          <label class="caption" for="down">Down</label>
-          <input class="input" type="number" placeholder="Down" value="2" id="down">
-        </div>
-      </div>
-
-
-      <button type="button" data-appearance="primary" id="generate">
-        Generate
-      </button>
+  <div x-show="$store.uiVisible" x-data="{
+      ratio: 1.067, 
+      up: 4, 
+      down: 2, 
+      generate() {
+        console.log('Generating');
+        parent.postMessage(`generate-${JSON.stringify({ ratio: this.ratio, up: this.up, down: this.down })}`, '*');
+      }
+      }" class="ui">
+    <div class="scale-options">
+      <label class="select-label-hidden" for="ratio">Scale</label>
+      <select x-model="ratio" class="select" id="ratio">
+        <option value="1.067">1.067 - Minor Second</option>
+        <option value="1.125">1.125 - Major Second</option>
+        <option value="1.2">1.2 - Minor Third</option>
+        <option value="1.25">1.25 - Major Third</option>
+        <option value="1.33">1.33 - Perfect Fourth</option>
+        <option value="1.406">1.406 - Augmented Fourth</option>
+        <option value="1.5">1.5 - Perfect Fifth</option>
+        <option value="1.6">1.6 - Minor Sixth</option>
+        <option value="1.618">1.618 - Golden Ratio</option>
+        <option value="1.667">1.667 - Major Sixth</option>
+        <option value="1.8">1.8 - Minor Seventh</option>
+        <option value="1.875">1.875 - Major Seventh</option>
+        <option value="2">2 - Octave</option>
+      </select>
     </div>
+
+    <div class="range-options">
+      <div>
+        <label class="caption" for="up">Up</label>
+        <input class="input" type="number" placeholder="Up" x-model.number="up" id="up">
+      </div>
+
+      <div>
+        <label class="caption" for="down">Down</label>
+        <input class="input" type="number" placeholder="Down" x-model.number="down" id="down">
+      </div>
+    </div>
+
+
+    <button type="button" data-appearance="primary" id="generate" @click="generate">
+      Generate
+    </button>
+
   </div>
 
   <script type="module" src="/src/main.ts"></script>

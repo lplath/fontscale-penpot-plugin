@@ -38,6 +38,8 @@ function createTypescale(scale: number, up: number, down: number) {
  * Receives a message from the UI (e.g. a button was pressed)
  */
 function onMessageReceived(message: string) {
+  console.log("[Message]: " + message);
+
   if (message.startsWith("generate")) {
     const { scale, up, down } = JSON.parse(message.split("-")[1]) as { scale: number, up: number, down: number };
     createTypescale(scale, up, down);

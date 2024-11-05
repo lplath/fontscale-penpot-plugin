@@ -9,11 +9,7 @@ body {
   padding: 1.5rem 0.75rem;
 }
 
-.hidden {
-  display: none;
-}
-
-.container {
+.ui {
   display: flex;
   flex-direction: column;
   gap: 1rem;
