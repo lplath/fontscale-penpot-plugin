@@ -1,18 +1,18 @@
+import { Message, SelectionChangedMessage, ThemeChangedMessage } from "./model";
 import "./style.css";
 
 
 const searchParams = new URLSearchParams(window.location.search);
 document.body.dataset.theme = searchParams.get("theme") ?? "light";
 
+const uiContainer = document.getElementById("ui") as HTMLDivElement;
+const emptyMessage = document.getElementById("empty-message") as HTMLDivElement;
+const ratioSelector = document.getElementById("ratio") as HTMLSelectElement;
+const upForm = document.getElementById("up") as HTMLInputElement;
+const downForm = document.getElementById("down") as HTMLInputElement;
+
 // FIXME: If a textbox is selected, when the plugin is opened, the UI should be visible
 let uiVisible = false;
-
-let uiContainer = document.getElementById("ui") as HTMLDivElement;
-let emptyMessage = document.getElementById("empty-message") as HTMLDivElement;
-let ratioSelector = document.getElementById("ratio") as HTMLSelectElement;
-let upForm = document.getElementById("up") as HTMLInputElement;
-let downForm = document.getElementById("down") as HTMLInputElement;
-
 
 document.getElementById("generate")?.addEventListener("click", () => {
   const scale = ratioSelector?.value;
@@ -22,26 +22,26 @@ document.getElementById("generate")?.addEventListener("click", () => {
 });
 
 
-window.addEventListener("message", (event) => {
-  switch (event.data.type) {
-    case "themechange":
-      document.body.dataset.theme = event.data.content;
-      break;
-    case "textselected":
-      const oneTextElementSelected = event.data.content as boolean;
+window.addEventListener("message", (event: MessageEvent<Message>) => {
+  if (event.data.type == "themechange") {
+    const message = event.data as ThemeChangedMessage;
 
-      if (oneTextElementSelected && !uiVisible) {
-        // Show UI
-        uiVisible = true;
-        uiContainer?.classList.remove("hidden");
-        emptyMessage?.classList.add("hidden");
-      }
-      else if (!oneTextElementSelected && uiVisible) {
-        // Hide UI
-        uiVisible = false;
-        uiContainer?.classList.add("hidden");
-        emptyMessage?.classList.remove("hidden");
-      }
-      break;
+    document.body.dataset.theme = message.content
+  }
+  else if (event.data.type == "textselected") {
+    const message = event.data as SelectionChangedMessage
+
+    if (message.content && !uiVisible) {
+      // Show UI
+      uiVisible = true;
+      uiContainer?.classList.remove("hidden");
+      emptyMessage?.classList.add("hidden");
+    }
+    else if (!message.content && uiVisible) {
+      // Hide UI
+      uiVisible = false;
+      uiContainer?.classList.add("hidden");
+      emptyMessage?.classList.remove("hidden");
+    }
   }
 });
