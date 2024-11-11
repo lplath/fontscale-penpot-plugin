@@ -10,7 +10,7 @@ export type SelectionChangedMessage = {
     content: boolean
 }
 
-export type Message = ThemeChangedMessage | SelectionChangedMessage;
+export type PluginMessage = ThemeChangedMessage | SelectionChangedMessage;
 
 export type GenerateMessageData = {
     scale: number,

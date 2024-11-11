@@ -1,6 +1,21 @@
 import { Theme, Text } from "@penpot/plugin-types";
-import { GenerateMessageData, Message } from "./model";
+import { GenerateMessageData, PluginMessage } from "./model";
 
+const scales = [
+  { value: 16 / 15, name: "Minor Second" },
+  { value: 9 / 8, name: "Major Second" },
+  { value: 6 / 5, name: "Minor Third" },
+  { value: 5 / 4, name: "Major Third" },
+  { value: 4 / 3, name: "Perfect Fourth" },
+  { value: 45 / 32, name: "Augmented Fourth" },
+  { value: 3 / 2, name: "Perfect Fifth" },
+  { value: 5 / 3, name: "Minor Sixth" },
+  { value: (1 + Math.sqrt(5)) / 2, name: "Golden Ratio" },
+  { value: 9 / 5, name: "Major Sixth" },
+  { value: 15 / 8, name: "Minor Seventh" },
+  { value: 2, name: "Octave" },
+  { value: Math.E, name: "Euler's number" },
+]
 
 function createScaleCopyFrom(text: Text, fontSize: number): Text {
   let copy = penpot.createText(text.characters);
@@ -84,7 +99,7 @@ function onThemeChanged(theme: Theme) {
   penpot.ui.sendMessage({
     type: "themechange",
     content: theme,
-  } as Message);
+  } as PluginMessage);
 }
 
 /**
@@ -96,10 +111,10 @@ function onSelectionChanged() {
   penpot.ui.sendMessage({
     type: "textselected",
     content: (selection.length == 1 && penpot.utils.types.isText(selection[0]))
-  } as Message)
+  } as PluginMessage)
 }
 
-penpot.ui.open("Typescale", `?theme=${penpot.theme}`, { width: 280, height: 270 });
+penpot.ui.open("Typescale", `?theme=${penpot.theme}`, { width: 280, height: 320 });
 penpot.ui.onMessage(onMessageReceived);
 penpot.on("selectionchange", onSelectionChanged);
 penpot.on("themechange", onThemeChanged);

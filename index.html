@@ -15,44 +15,77 @@
     </p>
   </div>
 
-  <form id="form">
+  <form>
+    <div class="options">
 
-    <div class="scale-options">
-      <label class="select-label-hidden" for="ratio">Scale</label>
-      <select x-model="ratio" class="select" id="ratio">
-        <option value="1.067">1.067 - Minor Second</option>
-        <option value="1.125">1.125 - Major Second</option>
-        <option value="1.2">1.2 - Minor Third</option>
-        <option value="1.25">1.25 - Major Third</option>
-        <option value="1.33">1.33 - Perfect Fourth</option>
-        <option value="1.406">1.406 - Augmented Fourth</option>
-        <option value="1.5">1.5 - Perfect Fifth</option>
-        <option value="1.6">1.6 - Minor Sixth</option>
-        <option value="1.618">1.618 - Golden Ratio</option>
-        <option value="1.667">1.667 - Major Sixth</option>
-        <option value="1.8">1.8 - Minor Seventh</option>
-        <option value="1.875">1.875 - Major Seventh</option>
-        <option value="2">2 - Octave</option>
-      </select>
-    </div>
+      <div class="scaleOptions">
+        <div class="scaleOptions__selector">
+          <label class="select-label-hidden" for="ratio">Scale</label>
+          <select class="select" name="scale">
+            <option value="0">1.067 - Minor Second</option>
+            <option value="1">1.125 - Major Second</option>
+            <option value="2">1.2 - Minor Third</option>
+            <option value="3">1.25 - Major Third</option>
+            <option value="4">1.33 - Perfect Fourth</option>
+            <option value="5">1.406 - Augmented Fourth</option>
+            <option value="6">1.5 - Perfect Fifth</option>
+            <option value="7">1.6 - Minor Sixth</option>
+            <option value="8">1.618 - Golden Ratio</option>
+            <option value="9">1.667 - Major Sixth</option>
+            <option value="10">1.8 - Minor Seventh</option>
+            <option value="11">1.875 - Major Seventh</option>
+            <option value="12">2 - Octave</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
 
-    <div class="range-options">
-      <div>
-        <label class="caption" for="up">Up</label>
-        <input class="input" type="number" placeholder="Up" x-model.number="up" id="up">
+        <div>
+          <template id="customScaleInput">
+            <div class="scaleOptions__customInput">
+              <label class="input-label-hidden" for="customScale">Up</label>
+              <input class="input" name="customSale" type="number" min="0" step="0.01"
+                placeholder="Enter a custom value" required>
+            </div>
+          </template>
+        </div>
+
+
       </div>
 
-      <div>
-        <label class="caption" for="down">Down</label>
-        <input class="input" type="number" placeholder="Down" x-model.number="down" id="down">
+      <div class="rangeOptions">
+
+        <div class="rangeOptions__input">
+          <label class="caption" for="numLargerFonts">Up</label>
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 3H5" />
+              <path d="M12 21V7" />
+              <path d="m6 15 6 6 6-6" />
+            </svg>
+            <input class="input" name="numLargerFonts" type="number" min="0" step="1" value="4" placeholder="Up"
+              required>
+          </div>
+        </div>
+
+        <div class="rangeOptions__input">
+          <label class="caption" for="numSmallerFonts">Down</label>
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 9-6-6-6 6" />
+              <path d="M12 3v14" />
+              <path d="M5 21h14" />
+            </svg>
+            <input class="input" name="numSmallerFonts" type="number" min="0" step="1" value="2" placeholder="Down"
+              required>
+          </div>
+        </div>
+
       </div>
     </div>
 
-
-    <button type="button" data-appearance="primary" id="generate" @click="generate">
-      Generate
-    </button>
-
+    <button type="submit" data-appearance="primary">Generate</button>
   </form>
 
   <script type="module" src="/src/main.ts"></script>
