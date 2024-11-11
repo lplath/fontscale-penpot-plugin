@@ -1,21 +1,7 @@
 import { Theme, Text } from "@penpot/plugin-types";
-import { GenerateMessageData, PluginMessage } from "./model";
+import { GenerateTypescaleMessage, PluginMessage, UIMessage } from "./model";
 
-const scales = [
-    { value: 16 / 15, name: "Minor Second" },
-    { value: 9 / 8, name: "Major Second" },
-    { value: 6 / 5, name: "Minor Third" },
-    { value: 5 / 4, name: "Major Third" },
-    { value: 4 / 3, name: "Perfect Fourth" },
-    { value: 45 / 32, name: "Augmented Fourth" },
-    { value: 3 / 2, name: "Perfect Fifth" },
-    { value: 5 / 3, name: "Minor Sixth" },
-    { value: (1 + Math.sqrt(5)) / 2, name: "Golden Ratio" },
-    { value: 9 / 5, name: "Major Sixth" },
-    { value: 15 / 8, name: "Minor Seventh" },
-    { value: 2, name: "Octave" },
-    { value: Math.E, name: "Euler's number" },
-]
+
 
 function createScaleCopyFrom(text: Text, fontSize: number): Text {
     let copy = penpot.createText(text.characters);
@@ -79,16 +65,17 @@ function createTypescale(scale: number, numLarger: number, numSmaller: number) {
 /**
  * Receives a message from the UI (e.g. a button was pressed)
  */
-function onMessageReceived(message: string) {
+function onMessageReceived(data: string) {
+    const message = JSON.parse(data) as UIMessage;
 
-    if (message.startsWith("generate")) {
-        const data: GenerateMessageData = JSON.parse(message.split("--")[1]);
+    if (message.type == "generate") {
+        const data = (message as GenerateTypescaleMessage).content;
         console.log(data);
         //createTypescale(data.scale, data.numLargerFonts, data.numSmallerFonts);
     }
 
     // Manually trigger a 'selectionchange' event
-    else if (message == "checkSelection") {
+    else if (message.type == "checkselection") {
         onSelectionChanged();
     }
 }
@@ -100,7 +87,7 @@ function onThemeChanged(theme: Theme) {
     penpot.ui.sendMessage({
         type: "themechange",
         content: theme,
-    } as PluginMessage);
+    });
 }
 
 /**
@@ -110,7 +97,7 @@ function onThemeChanged(theme: Theme) {
 function onSelectionChanged() {
     const selection = penpot.selection;
     penpot.ui.sendMessage({
-        type: "textselected",
+        type: "selectionchanged",
         content: (selection.length == 1 && penpot.utils.types.isText(selection[0]))
     } as PluginMessage)
 }

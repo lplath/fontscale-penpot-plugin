@@ -1,6 +1,6 @@
 import "./style.css";
 
-import { GenerateMessageData, PluginMessage, scales, SelectionChangedMessage, ThemeChangedMessage } from "./model";
+import { GenerateTypescaleMessage, PluginMessage, scales, SelectionChangedMessage, ThemeChangedMessage } from "./model";
 
 // Setup theme
 const searchParams = new URLSearchParams(window.location.search);
@@ -12,11 +12,11 @@ const selector = document.querySelector("select[name='scale']") as HTMLSelectEle
 const customScaleInput = document.getElementById("customScaleInput") as HTMLTemplateElement;
 
 function onPluginMessage(event: MessageEvent<PluginMessage>) {
-    if (event.data.type == "themechange") {
+    if (event.data.type == "themechanged") {
         const message = event.data as ThemeChangedMessage;
         document.body.dataset.theme = message.content
     }
-    else if (event.data.type == "textselected") {
+    else if (event.data.type == "selectionchanged") {
         const message = event.data as SelectionChangedMessage
         emptyMessage.classList.toggle("hidden", message.content);
         form.classList.toggle("hidden", !message.content);
@@ -38,15 +38,17 @@ function onSubmit(event: Event) {
         throw new Error("Form value was null");
     }
 
-    const messageData: GenerateMessageData = {
-        scale: parseInt(scale.toString()),
-        customScale: customScale != null ? parseFloat(customScale.toString()) : 0,
-        numSmallerFonts: parseInt(numLargerFonts.toString()),
-        numLargerFonts: parseInt(numLargerFonts.toString())
+    const message: GenerateTypescaleMessage = {
+        type: "generate",
+        content: {
+            scale: parseInt(scale.toString()),
+            customScale: customScale != null ? parseFloat(customScale.toString()) : 0,
+            numSmallerFonts: parseInt(numLargerFonts.toString()),
+            numLargerFonts: parseInt(numLargerFonts.toString())
+        }
     }
 
-    parent.postMessage(`generate--${JSON.stringify(messageData)}`, "*");
-
+    parent.postMessage(JSON.stringify(message), "*");
 }
 
 function onSelection(event: Event) {
@@ -87,4 +89,4 @@ form.addEventListener("submit", onSubmit);
 selector.addEventListener("change", onSelection);
 
 // Check if the UI should be shown initially
-parent.postMessage("checkSelection", "*");
+parent.postMessage(JSON.stringify({ type: "checkselection" }), "*");

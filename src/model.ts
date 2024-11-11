@@ -16,21 +16,36 @@ export const scales = [
     { value: Math.E, name: "Euler's number" },
 ]
 
+/**
+ * Plugin --> UI
+ */
+export type PluginMessage = ThemeChangedMessage | SelectionChangedMessage;
+
 export type ThemeChangedMessage = {
-    type: string,
+    type: "themechanged",
     content: Theme
 };
 
 export type SelectionChangedMessage = {
-    type: string,
+    type: "selectionchanged",
     content: boolean
 }
 
-export type PluginMessage = ThemeChangedMessage | SelectionChangedMessage;
+/**
+ * UI --> Plugin
+ */
+export type UIMessage = GenerateTypescaleMessage | CheckSelectionMessage;
 
-export type GenerateMessageData = {
-    scale: number,
-    customScale: number | null,
-    numSmallerFonts: number,
-    numLargerFonts: number,
+export type GenerateTypescaleMessage = {
+    type: "generate",
+    content: {
+        scale: number,
+        customScale: number | null,
+        numSmallerFonts: number,
+        numLargerFonts: number,
+    }
+}
+
+export type CheckSelectionMessage = {
+    type: "checkselection"
 }
