@@ -1,48 +1,79 @@
 import { Theme, Text } from "@penpot/plugin-types";
-import { Message } from "./model";
+import { GenerateMessageData, Message } from "./model";
 
 
-function generateFontsizes(fontSize: number, scale: number, up: number, down: number): number[] {
-  let result = [fontSize / scale ** down];
-  for (let i = 1; i <= up + down; i++) {
-    result[i] = result[i - 1] * scale;
+function createScaleCopyFrom(text: Text, fontSize: number): Text {
+  let copy = penpot.createText(text.characters);
+
+  if (copy == null) {
+    throw Error("Could not create text");
   }
 
-  return result;
+  copy.fontSize = fontSize.toString();
+
+  copy.growType = text.growType
+  copy.fontFamily = text.fontFamily;
+  copy.fontWeight = text.fontWeight;
+  copy.fontStyle = text.fontStyle;
+  copy.lineHeight = text.lineHeight;
+  copy.letterSpacing = text.letterSpacing;
+  copy.textTransform = text.textTransform;
+  copy.textDecoration = text.textDecoration;
+  copy.direction = text.direction;
+  copy.align = text.align;
+
+  return copy;
 }
 
 /**
  * Generate textfields with different font sizes
  * @param scale The amount by which the font-size is scaled each time
- * @param up Number of generated font-sizes larger than the basesize
- * @param down Number of generated font-sizes smaller than the basesize
+ * @param numLarger Number of generated font-sizes larger than the basesize
+ * @param numSmaller Number of generated font-sizes smaller than the basesize
  */
-function createTypescale(scale: number, up: number, down: number) {
+function createTypescale(scale: number, numLarger: number, numSmaller: number) {
   if (penpot.selection.length != 1 || !penpot.utils.types.isText(penpot.selection[0])) {
     console.error("Expected to have one textshape selected. Instead, the selection was: " + penpot.selection);
     return;
   }
 
   const selection = penpot.selection[0] as Text;
+  const baseFontSize = parseInt(selection.fontSize);
 
-  generateFontsizes(parseInt(selection.fontSize), scale, up, down)
-    .map((fontSize) => {
-      //FIXME: The new text should be removed from the selection
-      let text = selection.clone() as Text;
-      text.fontSize = fontSize.toString();
-      //TODO move
-    });
+  // TODO: Adjust
+  const gap = selection.height * 1.5;
+
+
+  for (let i = 1, y = selection.y; i <= numSmaller; i++) {
+    const text = createScaleCopyFrom(selection, baseFontSize / (scale ** i));
+    text.x = selection.x;
+    text.y = y + text.height + gap;
+    y = text.y;
+  }
+
+
+  for (let i = 1, y = selection.y; i <= numLarger; i++) {
+    const text = createScaleCopyFrom(selection, baseFontSize * (scale ** i));
+    text.x = selection.x;
+    text.y = y - text.height - gap;
+    y = text.y;
+  }
+
 }
 
 /**
  * Receives a message from the UI (e.g. a button was pressed)
  */
 function onMessageReceived(message: string) {
-  console.log("[Message]: " + message);
 
   if (message.startsWith("generate")) {
-    const { scale, up, down } = JSON.parse(message.split("-")[1]) as { scale: number, up: number, down: number };
-    createTypescale(scale, up, down);
+    const data: GenerateMessageData = JSON.parse(message.split("-")[1]);
+    createTypescale(data.scale, data.numLargerFonts, data.numSmallerFonts);
+  }
+
+  // Manually trigger a 'selectionchange' event
+  else if (message == "checkSelection") {
+    onSelectionChanged();
   }
 }
 
@@ -68,10 +99,8 @@ function onSelectionChanged() {
   } as Message)
 }
 
-penpot.ui.open("Typescale", `?theme=${penpot.theme}`, { width: 260, height: 290 });
+penpot.ui.open("Typescale", `?theme=${penpot.theme}`, { width: 280, height: 270 });
 penpot.ui.onMessage(onMessageReceived);
 penpot.on("selectionchange", onSelectionChanged);
 penpot.on("themechange", onThemeChanged);
-
-onSelectionChanged();
 

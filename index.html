@@ -5,27 +5,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Typescale</title>
-
-
 </head>
 
-<body x-data>
+<body>
 
-  <div x-show="!$store.uiVisible">
+  <div id="empty-message" class="hidden">
     <p class="body-m">
       Select a textbox with a base font
     </p>
   </div>
 
-  <div x-show="$store.uiVisible" x-data="{
-      ratio: 1.067, 
-      up: 4, 
-      down: 2, 
-      generate() {
-        console.log('Generating');
-        parent.postMessage(`generate-${JSON.stringify({ ratio: this.ratio, up: this.up, down: this.down })}`, '*');
-      }
-      }" class="ui">
+  <form id="form">
+
     <div class="scale-options">
       <label class="select-label-hidden" for="ratio">Scale</label>
       <select x-model="ratio" class="select" id="ratio">
@@ -62,7 +53,7 @@
       Generate
     </button>
 
-  </div>
+  </form>
 
   <script type="module" src="/src/main.ts"></script>
 

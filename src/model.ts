@@ -11,3 +11,9 @@ export type SelectionChangedMessage = {
 }
 
 export type Message = ThemeChangedMessage | SelectionChangedMessage;
+
+export type GenerateMessageData = {
+    scale: number,
+    numSmallerFonts: number,
+    numLargerFonts: number,
+}
