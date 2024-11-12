@@ -1,6 +1,5 @@
 import { Theme, Text } from "@penpot/plugin-types";
-import { GenerateTypescaleMessage, PluginMessage, UIMessage } from "./model";
-
+import type { GenerateTypescaleMessage, PluginMessage, UIMessage } from "./model";
 
 
 function createScaleCopyFrom(text: Text, fontSize: number): Text {
@@ -33,6 +32,11 @@ function createScaleCopyFrom(text: Text, fontSize: number): Text {
  * @param numSmaller Number of generated font-sizes smaller than the basesize
  */
 function createTypescale(scale: number, numLarger: number, numSmaller: number) {
+
+    console.log(scale);
+
+    return;
+
     if (penpot.selection.length != 1 || !penpot.utils.types.isText(penpot.selection[0])) {
         console.error("Expected to have one textshape selected. Instead, the selection was: " + penpot.selection);
         return;
@@ -70,8 +74,8 @@ function onMessageReceived(data: string) {
 
     if (message.type == "generate") {
         const data = (message as GenerateTypescaleMessage).content;
-        console.log(data);
-        //createTypescale(data.scale, data.numLargerFonts, data.numSmallerFonts);
+
+        createTypescale(data.scale, data.numLargerFonts, data.numSmallerFonts);
     }
 
     // Manually trigger a 'selectionchange' event
@@ -85,9 +89,9 @@ function onMessageReceived(data: string) {
  */
 function onThemeChanged(theme: Theme) {
     penpot.ui.sendMessage({
-        type: "themechange",
+        type: "themechanged",
         content: theme,
-    });
+    } as PluginMessage);
 }
 
 /**
