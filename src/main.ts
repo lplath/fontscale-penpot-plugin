@@ -1,15 +1,33 @@
 import "./style.css";
 
-import { GenerateTypescaleMessage, PluginMessage, scales, SelectionChangedMessage, ThemeChangedMessage } from "./model";
+import type { GenerateTypescaleMessage, PluginMessage, SelectionChangedMessage, ThemeChangedMessage } from "./model";
 
-// Setup theme
-const searchParams = new URLSearchParams(window.location.search);
-document.body.dataset.theme = searchParams.get("theme") ?? "light";
+
+/**
+ * Selection of proportions
+ * https://de.wikipedia.org/wiki/Proportion_(Architektur)#Zahlenverh%C3%A4ltnisse
+ */
+export const scales = [
+    { value: 9 / 8, name: "Major Second" },
+    { value: 6 / 5, name: "Minor Third" },
+    { value: 5 / 4, name: "Major Third" },
+    { value: 4 / 3, name: "Perfect Fourth" },
+    { value: Math.sqrt(2), name: "Squareroot of 2"},
+    { value: 3 / 2, name: "Perfect Fifth" },
+    { value: 8 / 5, name: "Minor Sixth" },
+    { value: (1 + Math.sqrt(5)) / 2, name: "Golden Ratio" },
+    { value: 5 / 3, name: "Major Sixth" },
+    { value: Math.sqrt(3), name: "Squareroot of 3"},
+    { value: 9 / 5, name: "Minor Seventh" },
+    { value: 15 / 8, name: "Major Seventh" },
+    { value: 2, name: "Octave" },
+]
 
 const emptyMessage = document.getElementById("empty-message") as HTMLDivElement;
 const form = document.querySelector("form") as HTMLFormElement;
 const selector = document.querySelector("select[name='scale']") as HTMLSelectElement;
 const customScaleInput = document.getElementById("customScaleInput") as HTMLTemplateElement;
+
 
 function onPluginMessage(event: MessageEvent<PluginMessage>) {
     if (event.data.type == "themechanged") {
@@ -33,16 +51,18 @@ function onSubmit(event: Event) {
     const numSmallerFonts = data.get("numSmallerFonts");
     const numLargerFonts = data.get("numLargerFonts");
 
-    // Should not be allowed by the <form> element
+
+    // Should not be allowed since all <input> have the 'required' attribute
     if (scale == null || numSmallerFonts == null || numLargerFonts == null) {
         throw new Error("Form value was null");
     }
 
+    const scaleString = customScale != null ? customScale.toString() : scale.toString();
+
     const message: GenerateTypescaleMessage = {
         type: "generate",
         content: {
-            scale: parseInt(scale.toString()),
-            customScale: customScale != null ? parseFloat(customScale.toString()) : 0,
+            scale: parseFloat(scaleString.replace(",", ".")),
             numSmallerFonts: parseInt(numLargerFonts.toString()),
             numLargerFonts: parseInt(numLargerFonts.toString())
         }
@@ -69,9 +89,13 @@ function onSelection(event: Event) {
 }
 
 function init() {
-    scales.forEach((scale, index) => {
+    // TODO: Make theme changes reactive
+    const searchParams = new URLSearchParams(window.location.search);
+    document.body.dataset.theme = searchParams.get("theme") ?? "light";
+
+    scales.forEach((scale) => {
         const option = document.createElement("option");
-        option.value = index.toString();
+        option.value = scale.value.toString();
         option.innerText =
             `${scale.value.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 3 })}  -  ${scale.name}`;
         selector.appendChild(option);
