@@ -63,7 +63,7 @@ function onSubmit(event: Event) {
         type: "generate",
         content: {
             scale: parseFloat(scaleString.replace(",", ".")),
-            numSmallerFonts: parseInt(numLargerFonts.toString()),
+            numSmallerFonts: parseInt(numSmallerFonts.toString()),
             numLargerFonts: parseInt(numLargerFonts.toString())
         }
     }

@@ -2,26 +2,10 @@ import { Theme, Text } from "@penpot/plugin-types";
 import type { GenerateTypescaleMessage, PluginMessage, UIMessage } from "./model";
 
 
-function createScaleCopyFrom(text: Text, fontSize: number): Text {
-    let copy = penpot.createText(text.characters);
-
-    if (copy == null) {
-        throw Error("Could not create text");
-    }
-
+function createCopy(text: Text, fontSize: number): Text {
+    const copy = text.clone() as Text;
     copy.fontSize = fontSize.toString();
-
-    copy.growType = text.growType
-    copy.fontFamily = text.fontFamily;
-    copy.fontWeight = text.fontWeight;
-    copy.fontStyle = text.fontStyle;
-    copy.lineHeight = text.lineHeight;
-    copy.letterSpacing = text.letterSpacing;
-    copy.textTransform = text.textTransform;
-    copy.textDecoration = text.textDecoration;
-    copy.direction = text.direction;
-    copy.align = text.align;
-
+    copy.growType = "auto-width";
     return copy;
 }
 
@@ -32,36 +16,31 @@ function createScaleCopyFrom(text: Text, fontSize: number): Text {
  * @param numSmaller Number of generated font-sizes smaller than the basesize
  */
 function createTypescale(scale: number, numLarger: number, numSmaller: number) {
-
-    console.log(scale);
-
-    return;
-
     if (penpot.selection.length != 1 || !penpot.utils.types.isText(penpot.selection[0])) {
-        console.error("Expected to have one textshape selected. Instead, the selection was: " + penpot.selection);
-        return;
+        throw new Error("Expected to have one textshape selected. Instead, the selection was: " + penpot.selection)
     }
 
     const selection = penpot.selection[0] as Text;
     const baseFontSize = parseInt(selection.fontSize);
+    const baseFontHeight = selection.height;
 
-    // TODO: Adjust
-    const gap = selection.height * 1.5;
+    const gap = baseFontHeight * 0.25;
 
-
-    for (let i = 1, y = selection.y; i <= numSmaller; i++) {
-        const text = createScaleCopyFrom(selection, baseFontSize / (scale ** i));
+    // Smaller
+    for (let i = 1; i <= numSmaller; i++) {
+        const text = createCopy(selection, baseFontSize / (scale ** i));
         text.x = selection.x;
-        text.y = y + text.height + gap;
-        y = text.y;
+        // Sum of the heights is h + h / s + h / s ^ 2 + ... + h / s ^ n (Geometric Series with r = 1 / s)
+        // => S_n = h * ((1 - 1 / s ^ (n + 1)) / (1 - 1 / s)) and S_(n - 1) = h * ((1 - 1 / s ^ n) / (1 - 1/s))
+        text.y = selection.y + i * gap + baseFontHeight * (1 - 1 / scale ** i) / (1 - 1 / scale);
     }
 
-
-    for (let i = 1, y = selection.y; i <= numLarger; i++) {
-        const text = createScaleCopyFrom(selection, baseFontSize * (scale ** i));
+    // Larger
+    for (let i = 1; i <= numLarger; i++) {
+        const text = createCopy(selection, baseFontSize * (scale ** i));
         text.x = selection.x;
-        text.y = y - text.height - gap;
-        y = text.y;
+        // Sum of heights S_n = h * ((1 - s ^ (n + 1))/(1 - s)) - h
+        text.y = selection.y - i * gap - (baseFontHeight * ((1 - scale ** (i + 1)) / (1 - scale)) - baseFontHeight);
     }
 
 }
