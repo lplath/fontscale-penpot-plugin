@@ -13,7 +13,6 @@ body {
   padding: 1.5rem 0.75rem;
 }
 
-
 form {
   height: 100%;
   display: flex;
@@ -40,7 +39,6 @@ button {
   flex-direction: column;
   gap: 1rem;
 }
-
 
 .scaleOptions {
   display: flex;

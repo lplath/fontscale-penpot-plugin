@@ -45,7 +45,6 @@ function onSubmit(event: Event) {
     event.preventDefault();
 
     const data = new FormData(form);
-
     const scale = data.get("scale");
     const customScale = data.get("customScale");
     const numSmallerFonts = data.get("numSmallerFonts");
@@ -89,7 +88,6 @@ function onSelection(event: Event) {
 }
 
 function init() {
-    // TODO: Make theme changes reactive
     const searchParams = new URLSearchParams(window.location.search);
     document.body.dataset.theme = searchParams.get("theme") ?? "light";
 
@@ -114,8 +112,3 @@ selector.addEventListener("change", onSelection);
 
 // Check if the UI should be shown initially
 parent.postMessage(JSON.stringify({ type: "checkselection" }), "*");
-
-
-/*document.querySelector("input[name='numLargerFonts']")?.addEventListener("wheel", (event) => {
-    console.log("scroll");
-})*/

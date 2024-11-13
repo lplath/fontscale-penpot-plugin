@@ -9,12 +9,6 @@ function createCopy(text: Text, fontSize: number): Text {
     return copy;
 }
 
-/**
- * Generate textfields with different font sizes
- * @param scale The amount by which the font-size is scaled each time
- * @param numLarger Number of generated font-sizes larger than the basesize
- * @param numSmaller Number of generated font-sizes smaller than the basesize
- */
 function createTypescale(scale: number, numLarger: number, numSmaller: number) {
     if (penpot.selection.length != 1 || !penpot.utils.types.isText(penpot.selection[0])) {
         throw new Error("Expected to have one textshape selected. Instead, the selection was: " + penpot.selection)
@@ -45,9 +39,6 @@ function createTypescale(scale: number, numLarger: number, numSmaller: number) {
 
 }
 
-/**
- * Receives a message from the UI (e.g. a button was pressed)
- */
 function onMessageReceived(data: string) {
     const message = JSON.parse(data) as UIMessage;
 
@@ -63,9 +54,6 @@ function onMessageReceived(data: string) {
     }
 }
 
-/**
- * Sends a message to the UI that the theme has changed
- */
 function onThemeChanged(theme: Theme) {
     penpot.ui.sendMessage({
         type: "themechanged",
@@ -73,10 +61,6 @@ function onThemeChanged(theme: Theme) {
     } as PluginMessage);
 }
 
-/**
- * Sends a message to the UI whenever the selection on the canvas has been changed.
- * The content of the message shows whether a single text-element is selected
- */
 function onSelectionChanged() {
     const selection = penpot.selection;
     penpot.ui.sendMessage({
