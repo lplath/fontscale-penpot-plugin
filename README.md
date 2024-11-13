@@ -1,3 +1,7 @@
 # Typescale
 ![cover](cover.png)
-Create harmonious type scales in penpot. Choose from a selection of commonly used proportions or enter your own.  
+Create harmonious type scales in penpot. Choose from a selection of commonly used proportions or enter your own.
+
+## Installation
+Under plugins add the following URL:
+`https://typescale-penpot-plugin.netlify.app/manifest.json`
