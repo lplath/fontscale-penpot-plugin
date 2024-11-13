@@ -19,17 +19,8 @@ export interface SelectionChangedMessage {
 /**
  * UI --> Plugin
  */
-export type UIMessage = GenerateTypescaleMessage | CheckSelectionMessage;
-
-export interface GenerateTypescaleMessage {
-    type: "generate",
-    content: {
-        scale: number,
-        numSmallerFonts: number,
-        numLargerFonts: number,
-    }
-}
-
-export interface CheckSelectionMessage {
-    type: "checkselection"
+export interface GenerateMessage {
+    scale: number,
+    numSmallerFonts: number,
+    numLargerFonts: number,
 }

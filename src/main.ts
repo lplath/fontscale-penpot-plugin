@@ -1,6 +1,6 @@
 import "./style.css";
 
-import type { GenerateTypescaleMessage, PluginMessage, SelectionChangedMessage, ThemeChangedMessage } from "./model";
+import type { GenerateMessage, PluginMessage, SelectionChangedMessage, ThemeChangedMessage } from "./model";
 
 
 /**
@@ -12,12 +12,12 @@ export const scales = [
     { value: 6 / 5, name: "Minor Third" },
     { value: 5 / 4, name: "Major Third" },
     { value: 4 / 3, name: "Perfect Fourth" },
-    { value: Math.sqrt(2), name: "Squareroot of 2"},
+    { value: Math.sqrt(2), name: "Squareroot of 2" },
     { value: 3 / 2, name: "Perfect Fifth" },
     { value: 8 / 5, name: "Minor Sixth" },
     { value: (1 + Math.sqrt(5)) / 2, name: "Golden Ratio" },
     { value: 5 / 3, name: "Major Sixth" },
-    { value: Math.sqrt(3), name: "Squareroot of 3"},
+    { value: Math.sqrt(3), name: "Squareroot of 3" },
     { value: 9 / 5, name: "Minor Seventh" },
     { value: 15 / 8, name: "Major Seventh" },
     { value: 2, name: "Octave" },
@@ -62,16 +62,13 @@ function onSubmit(event: Event) {
 
     const scaleString = customScale != null ? customScale.toString() : scale.toString();
 
-    const message: GenerateTypescaleMessage = {
-        type: "generate",
-        content: {
-            scale: parseFloat(scaleString.replace(",", ".")),
-            numSmallerFonts: parseInt(numSmallerFonts.toString()),
-            numLargerFonts: parseInt(numLargerFonts.toString())
-        }
+    const message: GenerateMessage = {
+        scale: parseFloat(scaleString.replace(",", ".")),
+        numSmallerFonts: parseInt(numSmallerFonts.toString()),
+        numLargerFonts: parseInt(numLargerFonts.toString())
     }
 
-    parent.postMessage(JSON.stringify(message), "*");
+    parent.postMessage(message, "*");
 }
 
 function onSelection(event: Event) {

@@ -1,5 +1,5 @@
 import { Theme, Text } from "@penpot/plugin-types";
-import type { GenerateTypescaleMessage, PluginMessage, UIMessage } from "./model";
+import type { GenerateMessage, PluginMessage } from "./model";
 
 function isTextSelected() {
     return penpot.selection.length == 1 && penpot.utils.types.isText(penpot.selection[0])
@@ -42,14 +42,8 @@ function createTypescale(scale: number, numLarger: number, numSmaller: number) {
 
 }
 
-function onMessageReceived(data: string) {
-    const message = JSON.parse(data) as UIMessage;
-
-    if (message.type == "generate") {
-        const data = (message as GenerateTypescaleMessage).content;
-
-        createTypescale(data.scale, data.numLargerFonts, data.numSmallerFonts);
-    }
+function onMessageReceived(data: GenerateMessage) {
+    createTypescale(data.scale, data.numLargerFonts, data.numSmallerFonts);
 }
 
 function onThemeChanged(theme: Theme) {
