@@ -98,8 +98,6 @@ function init() {
 
     document.body.dataset.theme = theme;
     changeUiVisibility(isUiVisible);
-    
-    console.log(isUiVisible);
 
     scales.forEach((scale) => {
         const option = document.createElement("option");
