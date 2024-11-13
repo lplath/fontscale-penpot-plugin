@@ -114,3 +114,8 @@ selector.addEventListener("change", onSelection);
 
 // Check if the UI should be shown initially
 parent.postMessage(JSON.stringify({ type: "checkselection" }), "*");
+
+
+/*document.querySelector("input[name='numLargerFonts']")?.addEventListener("wheel", (event) => {
+    console.log("scroll");
+})*/
