@@ -6,12 +6,12 @@ import { Theme } from "@penpot/plugin-types";
  */
 export type PluginMessage = ThemeChangedMessage | SelectionChangedMessage;
 
-export type ThemeChangedMessage = {
+export interface ThemeChangedMessage {
     type: "themechanged",
     content: Theme
 };
 
-export type SelectionChangedMessage = {
+export interface SelectionChangedMessage {
     type: "selectionchanged",
     content: boolean
 }
@@ -21,7 +21,7 @@ export type SelectionChangedMessage = {
  */
 export type UIMessage = GenerateTypescaleMessage | CheckSelectionMessage;
 
-export type GenerateTypescaleMessage = {
+export interface GenerateTypescaleMessage {
     type: "generate",
     content: {
         scale: number,
@@ -30,6 +30,6 @@ export type GenerateTypescaleMessage = {
     }
 }
 
-export type CheckSelectionMessage = {
+export interface CheckSelectionMessage {
     type: "checkselection"
 }
