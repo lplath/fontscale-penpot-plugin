@@ -60,7 +60,6 @@ function onThemeChanged(theme: Theme) {
 }
 
 function onSelectionChanged() {
-    const selection = penpot.selection;
     penpot.ui.sendMessage({
         type: "selectionchanged",
         content: isTextSelected()
