@@ -29,6 +29,11 @@ const selector = document.querySelector("select[name='scale']") as HTMLSelectEle
 const customScaleInput = document.getElementById("customScaleInput") as HTMLTemplateElement;
 
 
+function changeUiVisibility(visible: boolean) {
+    form.classList.toggle("hidden", !visible);
+    emptyMessage.classList.toggle("hidden", visible);
+}
+
 function onPluginMessage(event: MessageEvent<PluginMessage>) {
     if (event.data.type == "themechanged") {
         const message = event.data as ThemeChangedMessage;
@@ -36,8 +41,7 @@ function onPluginMessage(event: MessageEvent<PluginMessage>) {
     }
     else if (event.data.type == "selectionchanged") {
         const message = event.data as SelectionChangedMessage
-        emptyMessage.classList.toggle("hidden", message.content);
-        form.classList.toggle("hidden", !message.content);
+        changeUiVisibility(message.content);
     }
 }
 
@@ -89,7 +93,13 @@ function onSelection(event: Event) {
 
 function init() {
     const searchParams = new URLSearchParams(window.location.search);
-    document.body.dataset.theme = searchParams.get("theme") ?? "light";
+    const theme = searchParams.get("theme") ?? "light";
+    const isUiVisible = searchParams.get("initialState") != "hidden";
+
+    document.body.dataset.theme = theme;
+    changeUiVisibility(isUiVisible);
+    
+    console.log(isUiVisible);
 
     scales.forEach((scale) => {
         const option = document.createElement("option");
@@ -109,6 +119,3 @@ window.addEventListener("message", onPluginMessage);
 window.addEventListener("load", init);
 form.addEventListener("submit", onSubmit);
 selector.addEventListener("change", onSelection);
-
-// Check if the UI should be shown initially
-parent.postMessage(JSON.stringify({ type: "checkselection" }), "*");

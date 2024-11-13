@@ -1,6 +1,9 @@
 import { Theme, Text } from "@penpot/plugin-types";
 import type { GenerateTypescaleMessage, PluginMessage, UIMessage } from "./model";
 
+function isTextSelected() {
+    return penpot.selection.length == 1 && penpot.utils.types.isText(penpot.selection[0])
+}
 
 function createCopy(text: Text, fontSize: number): Text {
     const copy = text.clone() as Text;
@@ -47,11 +50,6 @@ function onMessageReceived(data: string) {
 
         createTypescale(data.scale, data.numLargerFonts, data.numSmallerFonts);
     }
-
-    // Manually trigger a 'selectionchange' event
-    else if (message.type == "checkselection") {
-        onSelectionChanged();
-    }
 }
 
 function onThemeChanged(theme: Theme) {
@@ -65,11 +63,11 @@ function onSelectionChanged() {
     const selection = penpot.selection;
     penpot.ui.sendMessage({
         type: "selectionchanged",
-        content: (selection.length == 1 && penpot.utils.types.isText(selection[0]))
+        content: isTextSelected()
     } as PluginMessage)
 }
 
-penpot.ui.open("Typescale", `?theme=${penpot.theme}`, { width: 280, height: 320 });
+penpot.ui.open("Typescale", `?theme=${penpot.theme}&initialState=${isTextSelected() ? "visible" : "hidden"}`, { width: 280, height: 320 });
 penpot.ui.onMessage(onMessageReceived);
 penpot.on("selectionchange", onSelectionChanged);
 penpot.on("themechange", onThemeChanged);
