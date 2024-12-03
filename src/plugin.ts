@@ -60,7 +60,7 @@ function onSelectionChanged() {
     } as PluginMessage)
 }
 
-penpot.ui.open("Typescale", `?theme=${penpot.theme}&initialState=${isTextSelected() ? "visible" : "hidden"}`, { width: 280, height: 320 });
+penpot.ui.open("Fontscale", `?theme=${penpot.theme}&initialState=${isTextSelected() ? "visible" : "hidden"}`, { width: 280, height: 320 });
 penpot.ui.onMessage(onMessageReceived);
 penpot.on("selectionchange", onSelectionChanged);
 penpot.on("themechange", onThemeChanged);
