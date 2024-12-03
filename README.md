@@ -4,4 +4,4 @@ Create harmonious type scales in penpot. Choose from a selection of commonly use
 
 ## Installation
 Under plugins add the following URL:
-`https://typescale-penpot-plugin.netlify.app/manifest.json`
+`https://fontscale-penpot-plugin.netlify.app/manifest.json`
